@@ -1,6 +1,6 @@
 # QuickCGO
 
-**QuickCGO** is a Go port of the [QuickCG](https://lodev.org/quickcg/) C++ graphics library. It provides a simple API for 2D graphics, color manipulation, image I/O, text rendering, and keyboard/mouse input using [SDL2](https://github.com/libsdl-org/SDL). The aim of this project is to make an easy-to-use graphics library that you can use to learn 2d graphics.
+**QuickCGO** is a Go port of the [QuickCG](https://lodev.org/quickcg/) C++ graphics library. It provides a simple API for 2D graphics, color manipulation, image I/O, text rendering, and keyboard/mouse input using [SDL2](https://github.com/libsdl-org/SDL). The aim of this project is to make an easy-to-use graphics library that you can use to learn 2D graphics.
 
 ## Features
 
@@ -28,7 +28,7 @@ Then run:
 go mod tidy
 ```
 
-This will automatically fetch quickcgo and its dependency github.com/veandco/go-sdl2.
+This will automatically fetch quickcgo and its dependencies.
 
 ## Example
 
