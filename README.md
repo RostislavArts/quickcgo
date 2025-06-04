@@ -40,7 +40,7 @@ import (
 )
 
 func main() {
-	scr := quickcg.NewScreen(256, 256, false, "Hello World")
+	scr, _ := quickcg.NewScreen(256, 256, false, "Hello World")
 
 	for x := 0; x < 256; x++ {
 		for y := 0; y < 256; y++ {
