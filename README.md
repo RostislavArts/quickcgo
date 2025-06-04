@@ -69,7 +69,7 @@ You can check more examples in *examples* folder.
 - `(*Screen).Redraw()` — update the screen
 - `(*Screen).Cls(color ColorRGB)` — clear screen
 - Drawing:
-  - `DrawLine`, `DrawRect`, `DrawCircle`, `DrawDisk`
+  - `DrawLine`, `DrawRect`, `DrawCircle`, `DrawFilledCircle`
 - Text:
   - `DrawText(x, y int, text string, color ColorRGB)`
 - Images:
@@ -77,7 +77,7 @@ You can check more examples in *examples* folder.
 - Color Conversion:
   - `RGBtoHSL`, `HSLtoRGB`, `RGBtoHSV`, `HSVtoRGB`
 - Input:
-  - `IsKeyPressed(scancode)`, `KeyDown(scancode)`
+  - `KeyPressed(keycode)`, `KeyDown(keycode)`
   - `GetMouseState()`, `MouseX`, `MouseY`, `LMB`, `RMB`
 
 ## Concurrency & Thread Safety
