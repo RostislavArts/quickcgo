@@ -5,7 +5,7 @@
 ## Features
 
 - Window creation and pixel-level rendering
-- Drawing primitives: lines, rectangles, circles, filled circles (disks)
+- Drawing primitives: lines, rectangles, circles, filled circles
 - Basic text rendering using `golang.org/x/image/font`
 - PNG image loading and saving
 - Color conversion: RGB ↔ HSL / HSV
@@ -53,7 +53,7 @@ func main() {
 }
 ```
 
-You can check more examples in *examples* folder.
+You can check more examples in [*examples*](https://github.com/RostislavArts/quickcgo/tree/main/examples) folder.
 
 ## Library Structure
 
