@@ -37,17 +37,17 @@ You do not need to install SDL2 manually — Go bindings are provided via CGO an
 However, your system must still have the SDL2 runtime library installed:
 
 - Linux:
-``bash
+```bash
 sudo apt install libsdl2-2.0-0
-``
+```
 
 - macOS:
-``bash
+```bash
 brew install sdl2
-``
+```
 
 - Windows:
-Download the SDL2 runtime DLL and place it next to your binary from SDL releases. Or use mingw64 with SDL2 (you can install it from https://github.com/libsdl-org/SDL/releases)
+Download the SDL2 runtime DLL and place it next to your binary from SDL releases. Or use mingw64 with SDL2 (you can install it from https://github.com/libsdl-org/SDL/releases).
 
 ## Example
 
