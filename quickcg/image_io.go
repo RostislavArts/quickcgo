@@ -6,6 +6,10 @@ import (
 	"image/color"
 	"image/png"
 	"os"
+	"time"
+	"unsafe"
+
+	"github.com/veandco/go-sdl2/sdl"
 )
 
 // LoadPNG loads a PNG image from directory and returns its pixels (row-major), width and height.
@@ -44,46 +48,42 @@ func LoadPNG(path string) ([]ColorRGB, int, int, error) {
 }
 
 // SaveScreenAsPNG saves the current contents of the screen to a PNG file at the given path.
-func (screen *Screen) SaveScreenAsPNG(path string) error {
-	img := image.NewRGBA(image.Rect(0, 0, screen.w, screen.h))
-	surface, err := screen.window.GetSurface()
+func (scr *Screen) SaveScreenAsPNG(path string) error {
+	img := image.NewRGBA(image.Rect(0, 0, scr.w, scr.h))
+
+	pixelData := make([]byte, scr.w*scr.h*4)
+
+	err := scr.renderer.ReadPixels(
+		nil,
+		sdl.PIXELFORMAT_ABGR8888,
+		unsafe.Pointer(&pixelData[0]),
+		scr.w*4,
+	)
 	if err != nil {
-		err = fmt.Errorf("Error getting surface: %s", err)
-		return err
+		return fmt.Errorf("failed to read pixels: %w", err)
 	}
 
-	err = surface.Lock()
-	if err != nil {
-		err = fmt.Errorf("Error locking surface: %s", err)
-		return err
-	}
-
-	defer surface.Unlock()
-	pixels := surface.Pixels()
-
-	for y := range screen.h {
-		for x := range screen.w {
-			offset := (y*int(screen.surface.Pitch) + x*4)
-			r := pixels[offset+2]
-			g := pixels[offset+1]
-			b := pixels[offset+0]
+	for y := range scr.h {
+		for x := range scr.w {
+			i := (y*scr.w + x) * 4
+			r := pixelData[i]
+			g := pixelData[i+1]
+			b := pixelData[i+2]
 			img.Set(x, y, color.RGBA{r, g, b, 255})
 		}
 	}
 
+	path = fmt.Sprintf("%v/screenshot_%v.png", path, time.Now().Format("2006-01-02_15-04-05"))
 	file, err := os.Create(path)
 	if err != nil {
-		err = fmt.Errorf("Error creating file: %s", err)
-		return err
+		return fmt.Errorf("failed to create file: %w", err)
 	}
 	defer file.Close()
 
 	err = png.Encode(file, img)
 	if err != nil {
-		err = fmt.Errorf("Error encoding file: %s", err)
-		return err
+		return fmt.Errorf("failed to encode PNG: %w", err)
 	}
 
 	return nil
 }
-
