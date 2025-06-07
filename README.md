@@ -67,7 +67,7 @@ You can check more examples in [*examples*](https://github.com/RostislavArts/qui
 - `NewScreen(width, height, fullscreen, title) *Screen`
 - `(*Screen).PSet(x, y int, color ColorRGB)` — set a pixel
 - `(*Screen).Redraw()` — update the screen
-- `(*Screen).Cls(color ColorRGB)` — clear screen
+- `(*Screen).Fill(color ColorRGB)` — fill screen with color
 - Drawing:
   - `DrawLine`, `DrawRect`, `DrawCircle`, `DrawFilledCircle`
 - Text:

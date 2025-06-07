@@ -76,6 +76,7 @@ func main() {
 
 			rendered = false
 		}
+
 		s.Redraw()
 	}
 }
