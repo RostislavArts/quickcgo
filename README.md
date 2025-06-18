@@ -36,17 +36,22 @@ You do not need to install SDL2 manually — Go bindings are provided via CGO an
 
 However, your system must still have the SDL2 runtime library installed:
 
-- Linux:
-```bash
-sudo apt install libsdl2-2.0-0
-```
+On __Ubuntu 22.04 and above__, type:\
+`apt install libsdl2{,-image,-mixer,-ttf,-gfx}-dev`
 
-- macOS:
-```bash
-brew install sdl2
-```
+On __Fedora 36 and above__, type:\
+`dnf install SDL2{,_image,_mixer,_ttf,_gfx}-devel`
 
-- Windows:
+On __Arch Linux__, type:\
+`pacman -S sdl2{,_image,_mixer,_ttf,_gfx}`
+
+On __Gentoo__, type:\
+`emerge -av libsdl2 sdl2-{image,mixer,ttf,gfx}`
+
+On __macOS__, install SDL2 via [Homebrew](http://brew.sh) like so:\
+`brew install sdl2{,_image,_mixer,_ttf,_gfx} pkg-config`
+
+On __Windows__:
 Download the SDL2 runtime DLL and place it next to your binary from SDL releases. Or use mingw64 with SDL2 (you can install it from https://github.com/libsdl-org/SDL/releases).
 
 ## Example
@@ -94,7 +99,7 @@ func main() {
 	// Draw buffer to screen
 	scr.DrawBuffer()
 
-    scr.Redraw()
+	scr.Redraw()
 	scr.Sleep()
 }
 ```
