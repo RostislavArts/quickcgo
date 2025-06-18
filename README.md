@@ -72,6 +72,34 @@ func main() {
 }
 ```
 
+## Example: Per-Pixel Drawing (Buffered)
+
+```go
+package main
+
+import (
+	"github.com/RostislavArts/quickcgo/quickcg"
+)
+
+func main() {
+	scr, _ := quickcg.NewScreen(256, 256, false, "Fast Drawing Example")
+
+	// Set pixels in internal buffer
+	for x := 0; x < 256; x++ {
+		for y := 0; y < 256; y++ {
+			scr.WritePixel(x, y, quickcg.ColorRGB{R: uint8(x), G: uint8(y), B: 128})
+		}
+	}
+
+	// Draw buffer to screen
+	scr.DrawBuffer()
+	scr.Sleep()
+}
+```
+
+This is **much faster** than calling `PSet()` per pixel, especially in real-time rendering.
+For immediate pixel updates, you can still use `PSet`.
+
 You can check more examples in [*examples*](https://github.com/RostislavArts/quickcgo/tree/main/examples) folder.
 
 ## Library Structure
@@ -86,6 +114,8 @@ You can check more examples in [*examples*](https://github.com/RostislavArts/qui
 - `NewScreen(width, height, fullscreen, title) *Screen`
 - `(*Screen).PSet(x, y int, color ColorRGB)` — set a pixel
 - `(*Screen).Redraw()` — update the screen
+- `(*Screen).WritePixel(x, y int, color ColorRGB)` — write pixel to buffer (fast)
+- `(*Screen).DrawBuffer()` — update screen from buffer
 - `(*Screen).Fill(color ColorRGB)` — fill screen with color
 - Drawing:
   - `DrawLine`, `DrawRect`, `DrawCircle`, `DrawFilledCircle`
@@ -98,6 +128,12 @@ You can check more examples in [*examples*](https://github.com/RostislavArts/qui
 - Input:
   - `KeyPressed(keycode)`, `KeyDown(keycode)`
   - `GetMouseState()`, `MouseX`, `MouseY`, `LMB`, `RMB`
+
+## Performance Notes
+
+* Prefer `WritePixel()` + `DrawBuffer()` when drawing many pixels.
+* Avoid calling `PSet()` inside loops — it’s slow and not hardware-accelerated.
+* Buffered drawing uses a texture and streams the entire frame to the GPU once per frame.
 
 ## Concurrency & Thread Safety
 
