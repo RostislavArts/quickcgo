@@ -3,6 +3,7 @@ package quickcg
 import (
 	"fmt"
 	"image"
+	"unsafe"
 	colorLib "image/color"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -32,6 +33,60 @@ func (screen *Screen) PSet(x, y int, color ColorRGB) error {
 		return err
 	}
 
+	return nil
+}
+
+// WritePixel writes a pixel color to the internal screen buffer at (x, y).
+// Unlike PSet, it does not draw immediately to the screen. To display changes,
+// call DrawBuffer after all pixel writes.
+// 
+// Coordinates outside the screen bounds are silently ignored.
+func (screen *Screen) WritePixel(x, y int, color ColorRGB) {
+	if x < 0 || y < 0 || x >= screen.w || y >= screen.h {
+		return
+	}
+	screen.buffer[y*screen.w+x] = color
+}
+
+// DrawBuffer updates the screen with the contents of the internal pixel buffer.
+// It converts the buffered ColorRGB values into an RGBA byte array,
+// uploads it to the GPU texture, and renders it to the window in one call.
+//
+// This method is significantly faster than using individual PSet calls
+// and should be preferred for drawing large numbers of pixels.
+func (screen *Screen) DrawBuffer() error {
+	pixels := make([]byte, screen.w*screen.h*4)
+
+	for i, c := range screen.buffer {
+		offset := i * 4
+		pixels[offset+0] = c.R
+		pixels[offset+1] = c.G
+		pixels[offset+2] = c.B
+		pixels[offset+3] = 255
+	}
+
+	if len(pixels) == 0 {
+		return fmt.Errorf("Empty pixel buffer")
+	}
+
+	var err error
+
+	err = screen.texture.Update(nil, unsafe.Pointer(&pixels[0]), screen.w*4)
+	if err != nil {
+		return fmt.Errorf("Error updating texture: %s", err)
+	}
+
+	err = screen.renderer.Clear()
+	if err != nil {
+		return fmt.Errorf("Error clearing renderer: %s", err)
+	}
+
+	err = screen.renderer.Copy(screen.texture, nil, nil)
+	if err != nil {
+		return fmt.Errorf("Error copying texture: %s", err)
+	}
+
+	screen.renderer.Present()
 	return nil
 }
 

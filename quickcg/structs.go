@@ -35,6 +35,8 @@ type Screen struct {
 	renderer       *sdl.Renderer // SDL renderer for accelerated drawing
 	event          sdl.Event     // last received SDL event
 	w, h           int           // window width and height in pixels
+	buffer []ColorRGB            // logic pixel buffer
+	texture *sdl.Texture         // SDL-texture for output
 }
 
 var (

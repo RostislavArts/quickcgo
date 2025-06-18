@@ -46,6 +46,17 @@ func NewScreen(width, height int, fullscreen bool, title string) (*Screen, error
 		return nil, err
 	}
 
+	scr.texture, err = scr.renderer.CreateTexture(
+		sdl.PIXELFORMAT_RGBA8888,
+		sdl.TEXTUREACCESS_STREAMING,
+		int32(scr.w), int32(scr.h),
+	)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to create texture: %s", err)
+	}
+
+	scr.buffer = make([]ColorRGB, scr.w * scr.h)
+
 	scr.surface, err = scr.window.GetSurface()
 	if err != nil {
 		err = fmt.Errorf("Failed to get screen surface: %s", err)
