@@ -85,7 +85,6 @@ func (scr *Screen) DrawBuffer() error {
 		return fmt.Errorf("error copying texture: %w", err)
 	}
 
-	scr.renderer.Present()
 	return nil
 }
 

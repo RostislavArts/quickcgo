@@ -93,6 +93,8 @@ func main() {
 
 	// Draw buffer to screen
 	scr.DrawBuffer()
+
+    scr.Redraw()
 	scr.Sleep()
 }
 ```
