@@ -54,39 +54,38 @@ func (screen *Screen) WritePixel(x, y int, color ColorRGB) {
 //
 // This method is significantly faster than using individual PSet calls
 // and should be preferred for drawing large numbers of pixels.
-func (screen *Screen) DrawBuffer() error {
-	pixels := make([]byte, screen.w*screen.h*4)
+func (scr *Screen) DrawBuffer() error {
+	pf, err := sdl.AllocFormat(sdl.PIXELFORMAT_RGBA8888)
+	if err != nil {
+		return fmt.Errorf("failed to allocate pixel format: %w", err)
+	}
 
-	for i, c := range screen.buffer {
+	pixels := make([]byte, scr.w*scr.h*4)
+	for i, c := range scr.buffer {
 		offset := i * 4
-		pixels[offset+0] = c.R
-		pixels[offset+1] = c.G
-		pixels[offset+2] = c.B
-		pixels[offset+3] = 255
+
+		packed := sdl.MapRGBA(pf, c.R, c.G, c.B, 255)
+
+		pixels[offset+0] = byte(packed)
+		pixels[offset+1] = byte(packed >> 8)
+		pixels[offset+2] = byte(packed >> 16)
+		pixels[offset+3] = byte(packed >> 24)
 	}
 
-	if len(pixels) == 0 {
-		return fmt.Errorf("Empty pixel buffer")
-	}
-
-	var err error
-
-	err = screen.texture.Update(nil, unsafe.Pointer(&pixels[0]), screen.w*4)
+	err = scr.texture.Update(nil, unsafe.Pointer(&pixels[0]), scr.w*4)
 	if err != nil {
-		return fmt.Errorf("Error updating texture: %s", err)
+		return fmt.Errorf("error updating texture: %w", err)
 	}
 
-	err = screen.renderer.Clear()
-	if err != nil {
-		return fmt.Errorf("Error clearing renderer: %s", err)
+	if err := scr.renderer.Clear(); err != nil {
+		return fmt.Errorf("error clearing renderer: %w", err)
 	}
 
-	err = screen.renderer.Copy(screen.texture, nil, nil)
-	if err != nil {
-		return fmt.Errorf("Error copying texture: %s", err)
+	if err := scr.renderer.Copy(scr.texture, nil, nil); err != nil {
+		return fmt.Errorf("error copying texture: %w", err)
 	}
 
-	screen.renderer.Present()
+	scr.renderer.Present()
 	return nil
 }
 
